@@ -1,0 +1,9 @@
+[run]
+source = function_app.py
+omit = tests/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
