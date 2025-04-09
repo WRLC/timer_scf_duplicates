@@ -8,6 +8,7 @@ a list of duplicates to an Azure Storage Queue for notification by email.
 - [http_alma_analytics](https://github.com/WRLC/http_alma_analytics): Azure Function to retrieve Alma Analytics data.
 - [queue_send_email](https://github.com/WRLC/queue_send_email): Azure Function to send email notifications.
 - Azure Storage Queues for email messages and additional requests messages.
+- Azure Blob Storage for storing the list of duplicate barcodes.
 
 
 ## Required Environment Variables
