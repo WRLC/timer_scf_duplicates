@@ -16,18 +16,20 @@ def process_response(response_text: str) -> None:
     try:
         data = json.loads(response_text)
 
-        if data['status'] == 'success':
-            if data['data']['is_finished'] == 'false':
-                # Not finished, save data and queue next request
-                batch_id = set_blob_data(data)
-                set_next_request(data, batch_id)  # type:ignore[arg-type]
-            else:
-                # Final batch, merge all data and send email
-                container_client = get_container_client()
-                merged_data = merge_blob_data(container_client, data['data'])
-                queue_email(merged_data)
     except Exception as e:
         logging.error("Error processing response: %s", str(e))
+        return
+
+    if data['status'] == 'success':
+        if data['data']['is_finished'] == 'false':
+            # Not finished, save data and queue next request
+            batch_id = set_blob_data(data)
+            set_next_request(data, batch_id)  # type:ignore[arg-type]
+        else:
+            # Final batch, merge all data and send email
+            container_client = get_container_client()
+            merged_data = merge_blob_data(container_client, data['data'])
+            queue_email(merged_data)
 
 
 class AnalyticsProcessor:  # pylint: disable=too-few-public-methods
