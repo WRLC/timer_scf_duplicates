@@ -89,6 +89,9 @@ def merge_blob_data(container_client, data):
     :param data: dict with batch data
     :return: merged data
     """
+    if 'batch_id' not in data:
+        return data
+
     batch_preffix = f"batch-{data['batch_id']}"
 
     try:
@@ -117,8 +120,9 @@ def queue_email(data: Any) -> None:
         'subject': 'SCF Duplicate Barcodes',
         'header': 'Duplicate barcodes have been found int the SCF',
         'caption': 'SCF Duplicate Barcodes',
-        'columns': data['data']['columns'],
-        'rows': data['data']['rows'],
+        'columns': data['columns'],
+        'rows': data['rows'],
+        'footer': 'This is an automated message. Please do not reply.',
         'recipients': os.getenv('EMAIL_RECIPIENTS'),
         'sender': os.getenv('EMAIL_SENDER'),
     }
