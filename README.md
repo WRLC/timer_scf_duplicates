@@ -24,6 +24,7 @@ a list of duplicates to an Azure Storage Queue for notification by email.
 - `ANALYSIS_NAME`: The name of the Alma Analytics analysis to run.
 - `AZURE_STORAGE_CONNECTION_STRING`: The connection string for the Azure Storage account.
 - `NEXT_REQUEST_QUEUE`: The name of the Azure Storage Queue for making additional requests with a resume token.
+- `EMAIL_STORAGE_CONNECTION_STRING`: The connection string for the Azure Storage account for the email queue.
 - `EMAIL_QUEUE`: The name of the Azure Storage Queue for email notifications.
 - `EMAIL_RECIPIENTS`: A comma-separated list of email addresses to send notifications to. (Will be replaced by DB)
 - `EMAIL_SENDER`: The email address to send notifications from

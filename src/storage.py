@@ -141,7 +141,7 @@ def queue_email(data: Any) -> None:
     }
     try:
         queue_client: QueueClient = QueueClient.from_connection_string(
-            conn_str=os.getenv('AZURE_STORAGE_CONNECTION_STRING'),  # type:ignore[arg-type]
+            conn_str=os.getenv('EMAIL_STORAGE_CONNECTION_STRING'),  # type:ignore[arg-type]
             queue_name=os.getenv('EMAIL_QUEUE'),  # type:ignore[arg-type]
             message_encode_policy=BinaryBase64EncodePolicy(),
             message_decode_policy=BinaryBase64DecodePolicy()
