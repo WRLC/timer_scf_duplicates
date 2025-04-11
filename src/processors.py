@@ -1,20 +1,24 @@
-"""
-Analytics Processor Module
-"""
+"""Analytics Processor Module"""
+
 import json
 import logging
+from typing import Any
+
 from src.storage import set_blob_data, set_next_request, get_container_client, merge_blob_data, queue_email
 
 
 def process_response(response_text: str) -> None:
-    """
-    Process the response from Alma Analytics API
+    """Process the response from Alma Analytics API
 
-    :param response_text: Response text from API
-    :return: None
+    Parameters:
+    response_text (str): The response text from the API.
+
+    Returns:
+    None
+
     """
     try:
-        data = json.loads(response_text)
+        data: Any = json.loads(response_text)
 
     except Exception as e:
         logging.error("Error processing response: %s", str(e))
@@ -36,6 +40,15 @@ class AnalyticsProcessor:  # pylint: disable=too-few-public-methods
     """Class to process analytics responses"""
 
     def __init__(self, blob_service=None, queue_service=None):
-        """Initialize the processor"""
+        """Initialize the processor
+
+        Parameters:
+        blob_service (BlobServiceClient): Blob service client.
+        queue_service (QueueServiceClient): Queue service client.
+
+        Returns:
+        None
+
+        """
         self.blob_service = blob_service
         self.queue_service = queue_service

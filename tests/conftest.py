@@ -1,16 +1,21 @@
-"""
-Common test fixtures for all test files
-"""
+"""Common test fixtures for all test files"""
+
 import json
 import os
+from typing import Generator
 from unittest.mock import MagicMock, patch
 import pytest
 from src.processors import AnalyticsProcessor
 
 
 @pytest.fixture
-def mock_azure_storage():
-    """Mock all Azure Storage classes to prevent connection attempts"""
+def mock_azure_storage() -> Generator[dict, None, None]:
+    """Mock all Azure Storage classes to prevent connection attempts
+
+    Returns:
+    dict: Mocked Azure Storage services
+
+    """
 
     # Mock the client creation methods directly - this is the most reliable approach
     with patch(
@@ -42,7 +47,15 @@ def mock_azure_storage():
 @pytest.fixture
 # pylint: disable=redefined-outer-name
 def analytics_processor(mock_azure_storage):
-    """Return an instance of AnalyticsProcessor with mocked services"""
+    """Return an instance of AnalyticsProcessor with mocked services
+
+    Parameters:
+    mock_azure_storage (dict): Mocked Azure Storage services
+
+    Returns:
+    AnalyticsProcessor: Instance of AnalyticsProcessor with mocked services
+
+    """
     return AnalyticsProcessor(
         blob_service=mock_azure_storage['blob_service'],
         queue_service=mock_azure_storage['queue_instance']
@@ -50,10 +63,14 @@ def analytics_processor(mock_azure_storage):
 
 
 @pytest.fixture
-def mock_env_variables():
+def mock_env_variables() -> Generator[None, None, None]:
+    """Set up environment variables for tests
+
+    Returns:
+    Generator: Yields a context with mocked environment variables
+
     """
-    Set up environment variables for tests
-    """
+
     with patch.dict(os.environ, {
         'HTTP_ALMA_ANALYTICS_URL': 'https://example.com/api',
         'IZ': 'TEST_IZ',
@@ -75,8 +92,11 @@ def mock_env_variables():
 
 @pytest.fixture
 def mock_successful_response():
-    """
-    Creates a mock successful response
+    """Creates a mock successful response
+
+    Returns:
+    MagicMock: Mock response object with status code 200 and sample data
+
     """
     mock_response = MagicMock()
     mock_response.status_code = 200
@@ -93,8 +113,11 @@ def mock_successful_response():
 
 @pytest.fixture
 def mock_continuation_response():
-    """
-    Creates a mock response with continuation token
+    """Creates a mock response with continuation token
+
+    Returns:
+    MagicMock: Mock response object with status code 200 and continuation token
+
     """
     mock_response = MagicMock()
     mock_response.status_code = 200

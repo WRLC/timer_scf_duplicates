@@ -1,21 +1,26 @@
-"""
-Unit tests for storage.py
-"""
+"""Unit tests for storage.py"""
+
 import json
 from unittest.mock import MagicMock, patch
 from src.storage import set_blob_data, queue_email, get_container_client, merge_blob_data, set_next_request
 
 
 class TestStorage:
-    """
-    Test the storage helper functions
-    """
+    """Test the storage helper functions"""
 
     @patch('src.storage.get_container_client')
     # pylint: disable=redefined-outer-name,unused-argument
     def test_set_blob_data(self, mock_get_container, mock_env_variables, mock_azure_storage):
-        """
-        Test the set_blob_data function
+        """Test the set_blob_data function
+
+        Parameters:
+        mock_get_container (MagicMock): Mocked get_container_client function
+        mock_env_variables (dict): Mocked environment variables
+        mock_azure_storage (dict): Mocked Azure Storage services
+
+        Returns:
+        None
+
         """
         mock_container = MagicMock()
         mock_container.exists.return_value = False
@@ -32,8 +37,16 @@ class TestStorage:
     @patch('azure.storage.queue.QueueClient')
     # pylint: disable=redefined-outer-name,unused-argument
     def test_queue_email(self, mock_queue_client, mock_env_variables, mock_azure_storage):
-        """
-        Test the queue_email function
+        """Test the queue_email function
+
+        Parameters:
+        mock_queue_client (MagicMock): Mocked QueueClient
+        mock_env_variables (dict): Mocked environment variables
+        mock_azure_storage (dict): Mocked Azure Storage services
+
+        Returns:
+        None
+
         """
         test_data = {
             'columns': {'column1': 'barcode', 'column2': 'title'},
@@ -50,7 +63,17 @@ class TestStorage:
     @patch('azure.storage.blob.BlobServiceClient.from_connection_string')
     # pylint: disable=redefined-outer-name,unused-argument
     def test_get_container_client(self, mock_from_connection_string, mock_env_variables):
-        """Test get_container_client function"""
+        """Test get_container_client function
+
+        Parameters:
+        mock_from_connection_string (MagicMock): Mocked BlobServiceClient
+        mock_env_variables (dict): Mocked environment variables
+        mock_azure_storage (dict): Mocked Azure Storage services
+
+        Returns:
+        None
+
+        """
         # Setup mock
         mock_service = MagicMock()
         mock_container = MagicMock()
@@ -67,7 +90,16 @@ class TestStorage:
     @patch('azure.storage.queue.QueueClient.from_connection_string')
     # pylint: disable=redefined-outer-name,unused-argument
     def test_set_next_request(self, mock_queue_client, mock_env_variables):
-        """Test set_next_request function"""
+        """Test set_next_request function
+
+        Parameters:
+        mock_queue_client (MagicMock): Mocked QueueClient
+        mock_env_variables (dict): Mocked environment variables
+
+        Returns:
+        None
+
+        """
         # Setup mocks
         mock_queue = MagicMock()
         mock_queue_client.return_value = mock_queue
@@ -88,10 +120,20 @@ class TestStorage:
         mock_queue_client.assert_called_once()
         mock_queue.send_message.assert_called_once()
 
+    # noinspection PyUnusedLocal
     @patch('src.storage.get_container_client')
     # pylint: disable=redefined-outer-name,unused-argument
     def test_merge_blob_data(self, mock_get_container, mock_env_variables):
-        """Test merge_blob_data function"""
+        """Test merge_blob_data function
+
+        Parameters:
+        mock_get_container (MagicMock): Mocked get_container_client function
+        mock_env_variables (dict): Mocked environment variables
+
+        Returns:
+        None
+
+        """
         # Setup mocks
         mock_container = MagicMock()
         mock_blob_client = MagicMock()
@@ -143,7 +185,16 @@ class TestStorageErrorHandling:
     # pylint: disable=redefined-outer-name,unused-argument
     @patch('azure.storage.queue.QueueClient.from_connection_string')
     def test_set_next_request_exception_handling(self, mock_queue_client, mock_env_variables):
-        """Test set_next_request function's exception handling"""
+        """Test set_next_request function's exception handling
+
+        Parameters:
+        mock_queue_client (MagicMock): Mocked QueueClient
+        mock_env_variables (dict): Mocked environment variables
+
+        Returns:
+        None
+
+        """
         # Setup mock to raise an exception
         mock_queue_client.side_effect = Exception("Test exception")
 
@@ -161,7 +212,15 @@ class TestStorageErrorHandling:
 
     # pylint: disable=redefined-outer-name,unused-argument
     def test_set_blob_data_exception_handling(self, mock_env_variables):
-        """Test set_blob_data function's exception handling"""
+        """Test set_blob_data function's exception handling
+
+        Parameters:
+        mock_env_variables (dict): Mocked environment variables
+
+        Returns:
+        None
+
+        """
         # Create a mock container client
         mock_container_client = MagicMock()
 
@@ -184,7 +243,15 @@ class TestStorageErrorHandling:
 
     # pylint: disable=redefined-outer-name,unused-argument
     def test_merge_blob_data_exception_handling(self, mock_env_variables):
-        """Test merge_blob_data exception handling"""
+        """Test merge_blob_data exception handling
+
+        Parameters:
+        mock_env_variables (dict): Mocked environment variables
+
+        Returns:
+        None
+
+        """
         # Create a mock container client
         mock_container = MagicMock()
 
@@ -204,8 +271,15 @@ class TestStorageErrorHandling:
             assert result == test_data
 
     def test_merge_blob_data_return_value_on_exception(self, mock_env_variables):
-        """Test that merge_blob_data returns the original data when an exception occurs"""
+        """Test that merge_blob_data returns the original data when an exception occurs
 
+        Parameters:
+        mock_env_variables (dict): Mocked environment variables
+
+        Returns:
+        None
+
+        """
         # Create test data with a unique identifier to verify it's returned unchanged
         original_data = {
             'columns': {'column1': 'barcode', 'column2': 'title'},
@@ -225,7 +299,15 @@ class TestStorageErrorHandling:
 
     # pylint: disable=redefined-outer-name,unused-argument
     def test_queue_email_exception_handling(self, mock_env_variables):
-        """Test exception handling in queue_email function"""
+        """Test exception handling in queue_email function
+
+        Parameters:
+        mock_env_variables (dict): Mocked environment variables
+
+        Returns:
+        None
+
+        """
         # Create test data
         test_data = {
             'columns': {'column1': 'barcode', 'column2': 'title'},

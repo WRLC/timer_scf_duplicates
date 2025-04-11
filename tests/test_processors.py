@@ -1,16 +1,12 @@
-# test_processors.py
-"""
-Unit tests for processors.py
-"""
+"""Unit tests for processors.py"""
+
 import json
 from unittest.mock import MagicMock, patch
 from src.processors import process_response
 
 
 class TestProcessResponse:
-    """
-    Test the process_response function
-    """
+    """Test the process_response function"""
 
     @patch('src.processors.set_blob_data')
     @patch('src.processors.set_next_request')
@@ -18,8 +14,17 @@ class TestProcessResponse:
     def test_process_with_continuation(
             self, mock_set_next, mock_set_blob, analytics_processor, mock_env_variables
     ):
-        """
-        Test the process_response function with a continuation token
+        """Test the process_response function with a continuation token
+
+        Parameters:
+        mock_set_next (MagicMock): Mocked set_next_request function
+        mock_set_blob (MagicMock): Mocked set_blob_data function
+        analytics_processor (AnalyticsProcessor): Instance of AnalyticsProcessor
+        mock_env_variables (dict): Mocked environment variables
+
+        Returns:
+        None
+
         """
 
         data = json.dumps({
@@ -44,8 +49,18 @@ class TestProcessResponse:
     def test_process_final_batch(
             self, mock_queue, mock_merge, mock_get_container, analytics_processor, mock_env_variables
     ):
-        """
-        Test the process_response function with final batch data
+        """Test the process_response function with final batch data
+
+        Parameters:
+        mock_queue (MagicMock): Mocked queue_email function
+        mock_merge (MagicMock): Mocked merge_blob_data function
+        mock_get_container (MagicMock): Mocked get_container_client function
+        analytics_processor (AnalyticsProcessor): Instance of AnalyticsProcessor
+        mock_env_variables (dict): Mocked environment variables
+
+        Returns:
+        None
+
         """
         mock_container = MagicMock()
         mock_get_container.return_value = mock_container
@@ -78,6 +93,7 @@ class TestProcessResponse:
 
     def test_process_response_general_exception(self):
         """Test handling of general exception in process_response function"""
+
         # Create valid-looking response data as a string
         response_data = json.dumps({
             "status": "success",

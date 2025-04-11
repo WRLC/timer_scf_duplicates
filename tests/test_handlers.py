@@ -1,7 +1,5 @@
-# test_handlers.py
-"""
-Unit tests for handlers.py
-"""
+"""Unit tests for handlers.py"""
+
 import json
 from unittest.mock import MagicMock, patch
 import azure.functions as func
@@ -10,9 +8,7 @@ from src.handlers import start_analytics, send_next_request
 
 
 class TestStartDuplicatesData:
-    """
-    Test the start_duplicates_data function
-    """
+    """Test the start_duplicates_data function"""
 
     @patch('requests.post')
     @patch('src.handlers.process_response')
@@ -20,7 +16,19 @@ class TestStartDuplicatesData:
     def test_successful_request(
             self, mock_process, mock_post, mock_env_variables, mock_successful_response, mock_azure_storage
     ):
-        """Test the start_duplicates_data function with a successful request"""
+        """Test the start_duplicates_data function with a successful request
+
+        Parameters:
+        mock_process (MagicMock): Mocked process_response function
+        mock_post (MagicMock): Mocked requests.post function
+        mock_env_variables (dict): Mocked environment variables
+        mock_successful_response (MagicMock): Mocked successful response
+        mock_azure_storage (dict): Mocked Azure Storage services
+
+        Returns:
+        None
+
+        """
         mock_post.return_value = mock_successful_response
 
         # Create a mock TimerRequest
@@ -41,7 +49,17 @@ class TestStartDuplicatesData:
     @patch('requests.post')
     # pylint: disable=redefined-outer-name,unused-argument
     def test_failed_request(self, mock_post, mock_env_variables, mock_azure_storage):
-        """Test handling of failed requests"""
+        """Test handling of failed requests
+
+        Parameters:
+        mock_post (MagicMock): Mocked requests.post function
+        mock_env_variables (dict): Mocked environment variables
+        mock_azure_storage (dict): Mocked Azure Storage services
+
+        Returns:
+        None
+
+        """
         # Configure the mock to raise an exception
         mock_post.side_effect = Exception("Connection error")
 
@@ -57,16 +75,26 @@ class TestStartDuplicatesData:
 
 
 class TestSendNextRequest:  # pylint: disable=too-few-public-methods
-    """
-    Test the send_next_request function
-    """
+    """Test the send_next_request function"""
 
     @patch('requests.post')
     @patch('src.handlers.process_response')
     # pylint: disable=redefined-outer-name,unused-argument
     def test_successful_continuation(
-            self, mock_process, mock_post, mock_env_variables, mock_successful_response, mock_azure_storage):
-        """Test the send_next_request function with a successful continuation"""
+            self, mock_process, mock_post, mock_env_variables, mock_successful_response, mock_azure_storage) -> None:
+        """Test the send_next_request function with a successful continuation
+
+        Parameters:
+        mock_process (MagicMock): Mocked process_response function
+        mock_post (MagicMock): Mocked requests.post function
+        mock_env_variables (dict): Mocked environment variables
+        mock_successful_response (MagicMock): Mocked successful response
+        mock_azure_storage (dict): Mocked Azure Storage services
+
+        Returns:
+        None
+
+        """
         # Setup the response
         mock_post.return_value = mock_successful_response
 
@@ -94,6 +122,7 @@ class TestHandlersErrorHandling:
 
     def test_start_analytics_request_exception(self):
         """Test handling of request exception in start_analytics"""
+
         mock_timer = MagicMock(spec=func.TimerRequest)
 
         with patch('requests.post', side_effect=requests.RequestException("Test error")):
@@ -104,6 +133,7 @@ class TestHandlersErrorHandling:
 
     def test_start_analytics_general_exception(self):
         """Test general exception handling in start_analytics"""
+
         mock_timer = MagicMock(spec=func.TimerRequest)
 
         with patch('requests.post', side_effect=Exception("Test error")):
@@ -115,6 +145,7 @@ class TestHandlersErrorHandling:
 
     def test_start_analytics_non_200_response(self):
         """Test handling of non-200 response in start_analytics"""
+
         mock_timer = MagicMock(spec=func.TimerRequest)
         mock_response = MagicMock()
         mock_response.status_code = 400
@@ -128,6 +159,7 @@ class TestHandlersErrorHandling:
 
     def test_send_next_request_invalid_json(self):
         """Test handling of invalid JSON in queue message"""
+
         mock_msg = MagicMock(spec=func.QueueMessage)
         mock_msg.get_body.return_value = b'invalid json'
 
@@ -138,6 +170,7 @@ class TestHandlersErrorHandling:
 
     def test_send_next_request_request_exception(self):
         """Test handling of request exception in send_next_request"""
+
         mock_msg = MagicMock(spec=func.QueueMessage)
         mock_msg.get_body.return_value = json.dumps({"test": "data"}).encode()
 
@@ -149,6 +182,7 @@ class TestHandlersErrorHandling:
 
     def test_send_next_request_general_exception(self):
         """Test handling of general exception in send_next_request"""
+
         # Create a mock QueueMessage with valid JSON
         mock_msg = MagicMock(spec=func.QueueMessage)
         mock_msg.get_body.return_value = json.dumps({"test": "data"}).encode()
@@ -163,6 +197,7 @@ class TestHandlersErrorHandling:
 
     def test_send_next_request_non_200_response(self):
         """Test handling of non-200 response in send_next_request"""
+
         mock_msg = MagicMock(spec=func.QueueMessage)
         mock_msg.get_body.return_value = json.dumps({"test": "data"}).encode()
 
