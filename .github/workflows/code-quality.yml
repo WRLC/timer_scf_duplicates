@@ -13,7 +13,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install dependencies
-        run: pip install flake8
+        run: pip install -r requirements.txt
       - name: Lint with flake8
         run: flake8 src tests
 
@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install dependencies
-        run: pip install mypy
+        run: pip install -r requirements.txt
       - name: Type check with mypy
         run: mypy src tests
 
@@ -39,6 +39,6 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install dependencies
-        run: pip install pylint
+        run: pip install -r requirements.txt
       - name: Lint with pylint
         run: pylint src tests
