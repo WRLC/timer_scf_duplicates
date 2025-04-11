@@ -1,30 +1,31 @@
-"""
-Analytics Storage Module
-"""
+"""Analytics Storage Module"""
 import json
 import time
 import logging
 import os
 from typing import Any
-from azure.storage.blob import BlobServiceClient, ContainerClient
+from azure.storage.blob import BlobServiceClient, ContainerClient, BlobClient
 from azure.storage.queue import QueueClient, BinaryBase64EncodePolicy, BinaryBase64DecodePolicy
 
 
-def set_blob_data(data) -> str | None:
-    """
-    Set blob data in Azure Blob Storage.
+def set_blob_data(data: Any) -> str | None:
+    """Set blob data in Azure Blob Storage.
 
-    :param data: str
-    :return: None
+    Parameters:
+    data (dict): The data to be stored in the blob.
+
+    Returns:
+    str: The batch ID of the blob.
+
     """
     container_client: ContainerClient = get_container_client()
 
     if not container_client.exists():
         container_client.create_container()
 
-    batch_id = str(int(time.time()))
+    batch_id: str = str(int(time.time()))
 
-    blob_client = container_client.get_blob_client(f'{batch_id}.json')
+    blob_client: BlobClient = container_client.get_blob_client(f'{batch_id}.json')
 
     try:
         blob_client.upload_blob(json.dumps(data), overwrite=True)
@@ -36,12 +37,15 @@ def set_blob_data(data) -> str | None:
 
 
 def set_next_request(data: Any, batch_id: str) -> None:
-    """
-    Set next request in Azure Queue Storage.
+    """Set next request in Azure Queue Storage.
 
-    :param data: Any
-    :param batch_id: str
-    :return: None
+    Parameters:
+    data (dict): The data to be sent in the queue message.
+    batch_id (str): The batch ID of the blob.
+
+    Returns:
+    None
+
     """
     try:
         queue_client: QueueClient = QueueClient.from_connection_string(
@@ -68,9 +72,11 @@ def set_next_request(data: Any, batch_id: str) -> None:
 
 
 def get_container_client() -> ContainerClient:
-    """
-    Get container client for Azure Blob Storage.
-    :return:
+    """Get container client for Azure Blob Storage.
+
+    Returns:
+    ContainerClient: The container client for the blob storage.
+
     """
     blob_service: BlobServiceClient = BlobServiceClient.from_connection_string(
         os.getenv('AZURE_STORAGE_CONNECTION_STRING')  # type:ignore[arg-type]
@@ -82,20 +88,23 @@ def get_container_client() -> ContainerClient:
 
 
 def merge_blob_data(container_client, data):
-    """
-    Merge blob data in Azure Blob Storage.
+    """Merge blob data in Azure Blob Storage.
 
-    :param container_client: ContainerClient
-    :param data: dict with batch data
-    :return: merged data
+    Parameters:
+    container_client (ContainerClient): The container client for the blob storage.
+    data (dict): The data to be merged.
+
+    Returns:
+    dict: The merged data.
+
     """
     if 'batch_id' not in data:
         return data
 
-    batch_preffix = f"batch-{data['batch_id']}"
+    batch_prefix = f"batch-{data['batch_id']}"
 
     try:
-        blob_list = container_client.list_blobs(name_starts_with=batch_preffix)
+        blob_list = container_client.list_blobs(name_starts_with=batch_prefix)
 
         for blob in blob_list:
             blob_client = container_client.get_blob_client(blob.name)
@@ -110,11 +119,14 @@ def merge_blob_data(container_client, data):
 
 
 def queue_email(data: Any) -> None:
-    """
-    Queue email with complete data.
+    """Queue email with complete data.
 
-    :param data: str
-    :return: None
+    Parameters:
+    data (dict): The data to be sent in the email.
+
+    Returns:
+    None
+
     """
     mail: dict[str, Any] = {
         'subject': 'SCF Duplicate Barcodes',

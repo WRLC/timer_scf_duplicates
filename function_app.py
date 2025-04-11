@@ -1,6 +1,4 @@
-"""
-Azure Function App main entry file
-"""
+"""Azure Function App main entry file"""
 import azure.functions as func
 
 from src.processors import AnalyticsProcessor, process_response
@@ -33,7 +31,15 @@ __all__ = [
     use_monitor=False
 )
 def start_duplicates_data(timer: func.TimerRequest) -> None:
-    """Azure Function timer trigger wrapper"""
+    """Azure Function timer trigger wrapper
+
+    Parameters:
+    timer (func.TimerRequest): The timer trigger request object.
+
+    Returns:
+    None
+
+    """
     return start_analytics(timer)
 
 
@@ -44,5 +50,13 @@ def start_duplicates_data(timer: func.TimerRequest) -> None:
     connection='AzureWebJobsStorage'
 )
 def send_next_analytics_request(msg: func.QueueMessage) -> None:
-    """Azure Function queue trigger wrapper"""
+    """Azure Function queue trigger wrapper
+
+    Parameters:
+    msg (func.QueueMessage): The queue message object.
+
+    Returns:
+    None
+
+    """
     return send_next_request(msg)

@@ -1,6 +1,4 @@
-"""
-Analytics handlers module
-"""
+"""Analytics handlers module"""
 import json
 import logging
 import os
@@ -11,11 +9,14 @@ from src.processors import process_response
 
 # noinspection PyUnusedLocal
 def start_analytics(req: func.TimerRequest) -> None:  # pylint: disable=unused-argument
-    """
-    Process a timer trigger to start analytics data collection.
+    """Process a timer trigger to start analytics data collection.
 
-    :param req: func.TimerRequest
-    :return: None
+    Parameters:
+    req (func.TimerRequest): The timer trigger request object.
+
+    Returns:
+    None
+
     """
     logging.info("Starting analytics data collection")
 
@@ -45,11 +46,14 @@ def start_analytics(req: func.TimerRequest) -> None:  # pylint: disable=unused-a
 
 
 def send_next_request(msg: func.QueueMessage) -> None:
-    """
-    Process the queue message and send the next request to Alma Analytics API.
+    """Process the queue message and send the next request to Alma Analytics API.
 
-    :param msg: func.QueueMessage
-    :return: None
+    Parameters:
+    msg (func.QueueMessage): The queue message object.
+
+    Returns:
+    None
+
     """
     logging.info("Sending next request to Alma Analytics API")
 
