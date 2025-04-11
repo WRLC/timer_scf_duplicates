@@ -1,5 +1,9 @@
 # timer_scf_duplicates
 
+[![Python Tests](https://github.com/wrlc/timer_scf_duplicates/actions/workflows/tests.yml/badge.svg)](https://github.com/wrlc/timer_scf_duplicates/actions/workflows/tests.yml)
+[![Code Quality](https://github.com/wrlc/timer_scf_duplicates/actions/workflows/code-quality.yml/badge.svg)](https://github.com/wrlc/timer_scf_duplicates/actions/workflows/code-quality.yml)
+
+
 Timer-triggered Azure Function to check for duplicate barcodes in the WRLC Shared Collection Facility (SCF) and send
 a list of duplicates to an Azure Storage Queue for notification by email.
 

@@ -1,4 +1,5 @@
 """Analytics Processor Module"""
+
 import json
 import logging
 from typing import Any

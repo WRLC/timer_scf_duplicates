@@ -1,3 +1,1 @@
-"""
-Analytics source code
-"""
+"""Analytics source code"""
