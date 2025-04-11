@@ -22,6 +22,8 @@ jobs:
 
       - name: Run tests
         run: pytest --cov=src tests/
+        env:
+          PYTHONPATH: ${{ github.workspace }}
 
       - name: Generate coverage report
         run: |
