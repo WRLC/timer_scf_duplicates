@@ -36,10 +36,8 @@ class TestStorage:
         Test the queue_email function
         """
         test_data = {
-            'data': {
-                'columns': ['barcode', 'title'],
-                'rows': [['123456789', 'Test Book']]
-            }
+            'columns': {'column1': 'barcode', 'column2': 'title'},
+            'rows': [['123456789', 'Test Book']]
         }
 
         mock_queue = mock_azure_storage['queue_instance']
@@ -205,15 +203,33 @@ class TestStorageErrorHandling:
             mock_logging.assert_called_once()
             assert result == test_data
 
+    def test_merge_blob_data_return_value_on_exception(self, mock_env_variables):
+        """Test that merge_blob_data returns the original data when an exception occurs"""
+
+        # Create test data with a unique identifier to verify it's returned unchanged
+        original_data = {
+            'columns': {'column1': 'barcode', 'column2': 'title'},
+            'rows': [['123456789', 'Test Book']]
+        }
+
+        # Create a mock container that raises an exception
+        mock_container = MagicMock()
+        mock_container.list_blobs.side_effect = Exception("Test exception")
+
+        # Call the function
+        result = merge_blob_data(mock_container, original_data)
+
+        # The key assertion - verify line 93 executes by confirming
+        # the original data object is returned unchanged
+        assert result is original_data  # Using 'is' instead of '==' for strict identity check
+
     # pylint: disable=redefined-outer-name,unused-argument
     def test_queue_email_exception_handling(self, mock_env_variables):
         """Test exception handling in queue_email function"""
         # Create test data
         test_data = {
-            'data': {
-                'columns': ['barcode', 'title'],
-                'rows': [['123456789', 'Test Book']]
-            }
+            'columns': {'column1': 'barcode', 'column2': 'title'},
+            'rows': [['123456789', 'Test Book']]
         }
 
         # Mock QueueClient to raise an exception when called
