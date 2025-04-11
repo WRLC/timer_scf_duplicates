@@ -22,7 +22,7 @@ def start_analytics(req: func.TimerRequest) -> None:  # pylint: disable=unused-a
     try:
         # Call Alma Analytics API
         response = requests.post(
-            os.getenv('HTTP_ALMA_ANALYTICS_URL'),
+            os.getenv('HTTP_ALMA_ANALYTICS_URL'),  # type:ignore[arg-type]
             json={
                 'iz': os.getenv('IZ'),
                 'analysis': os.getenv('ANALYSIS_NAME')
@@ -62,7 +62,7 @@ def send_next_request(msg: func.QueueMessage) -> None:
 
     try:
         response = requests.post(
-            os.getenv('HTTP_ALMA_ANALYTICS_URL'),
+            os.getenv('HTTP_ALMA_ANALYTICS_URL'),  # type:ignore[arg-type]
             json=message_data,
             headers={'x-functions-key': os.getenv('HTTP_ALMA_ANALYTICS_API_KEY')},
             timeout=300
