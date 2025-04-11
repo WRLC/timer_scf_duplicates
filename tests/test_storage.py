@@ -280,7 +280,6 @@ class TestStorageErrorHandling:
         None
 
         """
-
         # Create test data with a unique identifier to verify it's returned unchanged
         original_data = {
             'columns': {'column1': 'barcode', 'column2': 'title'},
