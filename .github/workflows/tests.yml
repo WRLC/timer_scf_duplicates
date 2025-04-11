@@ -1,0 +1,32 @@
+#file: noinspection UndefinedAction
+name: Python Tests
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Install test dependencies
+          pip install pytest pytest-cov
+          # Install project dependencies
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Run tests
+        run: pytest --cov=src tests/
+      - name: Generate coverage report
+        run: |
+          python -m coverage report
+          python -m coverage html
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: htmlcov/
